@@ -1,28 +1,22 @@
 <template>
-    <div class="container">
-        <transition name="fade">
-            <div v-if="isActive !== null"  class="input-container">
-                <div v-if="isActive === 0" class="search">
-                    <label class="search-label" for="search">Search Word</label>
-                    <input class="search-input" type="text" id="search" v-model="input">
-                    <button class="search-btn">Find<span style="font-size: 22px; font-style: italic">{{input ? ': '+input : ''}}</span></button>
-                </div>
-
-                <div v-if="isActive === 1" class="add">
-                    <label class="add-label" for="add">Add Word</label>
-                    <input class="add-input" type="text" id="add" v-model="input">
-                    <button class="add-btn">Add<span style="font-size: 22px; font-style: italic">{{input ? ': '+input : ''}}</span></button>
-                </div>
-            </div>
-        </transition>
-        <div class="menu">
-            <ul class="menu-items">
-                <li v-for="(itm, i) in btns" :key="itm+i" :class="`menu-itm menu-itm-${i+1}`">
-                    <button :class="`menu-itm-btn menu-itm-btn-${i+1}`" @touchend="isActive = i">{{itm}}</button>
-                </li>
-            </ul>
+    <main class="container">
+        <div class="search">
+            <label class="search-label" for="search"> </label>
+            <input class="search-input" id="search" type="search" v-model="inputForm">
         </div>
-    </div>
+        <ul class="word-list">
+            <li v-for="(itm, i) in wordList" :key="itm+i" :class="`word-list_item word-list_item-${i+1}`">
+                <div class="lang eng">{{itm.eng}}</div>
+                <span class="arrow">→</span>
+                <div class="lang ru">{{itm.ru}}</div>
+            </li>
+        </ul>
+        <ul class="menu">
+            <li v-for="(itm, i) in buttons" :key="itm+i" :class="`menu_item menu_item-${i+1}`">
+                <button :class="`menu_item_btn menu_item_btn${i+1}`" @click="isButton(i+1)">{{itm}}</button>
+            </li>
+        </ul>
+    </main>
 </template>
 
 <script>
@@ -33,23 +27,50 @@
         components: {},
         data() {
             return {
-                btns: [
-                    "Find Word",
-                    "Add Word"
+                buttons: [
+                    "Find",
+                    "Add",
+                    "Edit",
+                    "Delete"
                 ],
-                isActive: null,
-                input: ""
+
+                wordList: [
+                    {
+                        eng: "Hello",
+                        ru: 'Привет'
+                    },
+                    {
+                        eng: "Pharmacy",
+                        ru: 'Аптека'
+                    },
+                    {
+                        eng: "Pharmacology",
+                        ru: 'Фармакология'
+                    }
+                ],
+
+                isInput: false,
+                inputForm: ''
             }
         },
 
-        watch: {
-            isActive (val) {
-                this.input = "";
-            }
-        },
+        watch: {},
 
         methods: {
+            isButton(i) {
+                if (i <= 2) {
+                    const input =  document.querySelector('.search-input');
+                    const tl = new TimelineMax({onComplete:()=>{input.focus()}});
 
+                    this.isInput = !this.isInput;
+                    if (this.isInput) tl.to('.search-input', {opacity:1, height:50});
+                    else {
+                        tl.to('.search-input', {opacity:0, height:0});
+                        this.inputForm = '';
+                    }
+                }
+
+        }
         },
 
         mounted() {
@@ -59,102 +80,84 @@
 </script>
 
 <style lang="scss" scoped>
-    .container {
-        display: flex;
-        justify-content: space-around;
-        flex-wrap: wrap;
-    }
-
-    .input-container {
-        /*display: flex;*/
-        /*justify-content: center;*/
-        text-align: center;
-    }
-    .search {
-        display: flex;
-        flex-direction: column;
-        width: 500px;
-
-        &-label {
-            display: block;
-            font-size: 2em;
-            margin-top: 30px;
-            margin-bottom: 15px;
-            color: blue;
-        }
-
-        &-input {
-            width: 500px;
-            font-size: 1.5em;
-            margin: 1px;
-            padding: 10px;
-        }
-
-        &-btn {
-            max-width: 500px;
-            width: 200px;
-            margin: 20px auto;
-            padding: 15px;
-            background-color: #ffffff;
-            border: 1px solid;
-            border-radius: 5px;
-            font-size: 1.5em;
-        }
-    }
-
-    .add {
-        display: flex;
-        flex-direction: column;
-        width: 500px;
-
-        &-label {
-            display: block;
-            font-size: 2em;
-            margin-top: 30px;
-            margin-bottom: 15px;
-            color: blue;
-        }
-
-        &-input {
-            width: 500px;
-            font-size: 1.5em;
-            margin: 1px;
-            padding: 10px;
-        }
-
-        &-btn {
-            max-width: 500px;
-            width: 200px;
-            margin: 20px auto;
-            padding: 15px;
-            background-color: #ffffff;
-            border: 1px solid;
-            border-radius: 5px;
-            font-size: 1.5em;
-        }
-    }
 
     .menu {
-        &-items {
-            margin: 0 10px;
-        }
+        position: absolute;
+        bottom: 0;
+        display: flex;
+        width: 100%;
 
-        &-itm {
-            margin: 30px auto 20px;
-            &-btn {
-                max-width: 500px;
-                width: 200px;
+        &_item {
+            width: 100%;
+            height: 50px;
 
-                padding: 15px;
-                background-color: #ffffff;
+            &_btn {
+                width: 100%;
+                height: 50px;
+                background: #ffffff;
                 border: 1px solid;
-                border-radius: 5px;
-                font-size: 1.5em;
+                border-right: none;
+                font-family: 'Diaria Sans Pro', serif;
             }
         }
     }
 
-    @media (max-width: 768px) and (orientation: portrait){
+    .search {
+        width: 100%;
+
+        &-input {
+            width: 100%;
+            height: 0;
+            color: #242020cf;
+            font-size: 18px;
+            font-weight: 500;
+            padding: 5px;
+            opacity: 0;
+            border: none;
+            border-bottom: 1px solid;
+            border-radius: 0;
+            -webkit-appearance: none;
+        }
+    }
+
+    .word-list {
+        width: 100%;
+
+        &_item {
+            display: flex;
+            width: 100%;
+            height: 60px;
+
+            border-bottom: 1px solid;
+            font-size: 28px;
+            font-weight: 500;
+            overflow: scroll;
+
+            .lang {
+                //width: 100%;
+                height: 100%;
+                display: flex;
+                justify-content: start;
+                align-items: center;
+                color: #242020cf;
+                padding: 10px;
+
+                &.ru {
+                    color: lighten(#242020cf, 30%);
+                }
+            }
+
+            .arrow {
+                display: flex;
+                align-items: center;
+                justify-content: start;
+                width: 30px;
+                height: 100%;
+            }
+        }
+    }
+
+    @media (max-width: 768px) and (orientation: portrait) {
         .container {
 
         }

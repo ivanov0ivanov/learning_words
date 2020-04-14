@@ -9,12 +9,19 @@
   -ms-touch-action: none;
   user-select: none;
   -webkit-user-select: none;
-
   box-sizing: border-box;
   word-wrap: break-word;
-
   margin: 0;
   padding: 0;
+}
+
+input {
+  -webkit-user-select: auto !important;
+  -khtml-user-select: auto !important;
+  -moz-user-select: auto !important;
+  -ms-user-select: auto !important;
+  -o-user-select: auto !important;
+  user-select: auto !important;
 }
 
 ul {
@@ -22,7 +29,8 @@ ul {
 }
 
 body {
-  max-width: 1024px;
-  max-height: 1366px;
+  max-width: 100%;
+  max-height: 100%;
   font-family: 'Helvetica Neue', serif;
 }
+
