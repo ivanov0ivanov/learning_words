@@ -69,8 +69,7 @@
                         this.inputForm = '';
                     }
                 }
-
-        }
+            }
         },
 
         mounted() {
