@@ -57,6 +57,11 @@
         watch: {},
 
         methods: {
+            //v-touch:swipe="touchHandler"
+            touchHandler(direction) {
+                console.log(direction);
+            },
+
             isButton(i) {
                 if (i <= 2) {
                     const input =  document.querySelector('.search-input');
@@ -136,7 +141,7 @@
                 //width: 100%;
                 height: 100%;
                 display: flex;
-                justify-content: start;
+                justify-content: flex-start;
                 align-items: center;
                 color: #242020cf;
                 padding: 10px;
@@ -149,7 +154,7 @@
             .arrow {
                 display: flex;
                 align-items: center;
-                justify-content: start;
+                justify-content: flex-start;
                 width: 30px;
                 height: 100%;
             }
