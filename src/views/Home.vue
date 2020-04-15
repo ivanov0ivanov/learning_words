@@ -69,9 +69,11 @@
         },
 
         watch: {
-            addForm() {
-                const tl = new TimelineMax();
-                tl.to('.menu_item_btn2', .3, {color: '#ffffff', backgroundColor: '#67b267'})
+            addForm(val) {
+                this.$nextTick(()=>{
+                    const tl = new TimelineMax();
+                    if (val) tl.to('.menu_item_btn2', .3, {color: '#ffffff', backgroundColor: '#67b267'})
+                })
             }
         },
 
