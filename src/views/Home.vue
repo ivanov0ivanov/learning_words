@@ -102,28 +102,29 @@
                     this.isAdd = !this.isAdd;
                     if (this.isAdd) tl.to('.add-input', {opacity:1, height:50});
                     else {
-                        if (this.addForm) {
-                            if (/^[a-z\s]+$/i.test(this.addForm)) this.currLang.eng = this.addForm;
-                            if (/[а-яё]/i.test(this.addForm)) this.currLang.ru = this.addForm;
+                        if (!this.addForm) tl.to('.add-input', {opacity:0, height:0});
+                    }
 
-                            this.addForm = '';
+                    if (this.addForm) {
+                        if (/^[a-z\s]+$/i.test(this.addForm)) this.currLang.eng = this.addForm;
+                        if (/[а-яё]/i.test(this.addForm)) this.currLang.ru = this.addForm;
 
-                            if (this.currLang.eng && this.currLang.ru) {
-                                this.wordList.push({
-                                    eng: this.currLang.eng,
-                                    ru: this.currLang.ru
-                                });
+                        this.addForm = '';
 
-                                this.currLang.eng = '';
-                                this.currLang.ru = '';
-                                tl.to('.add-input', {opacity:0, height:0});
-                            }
+                        if (this.currLang.eng && this.currLang.ru) {
+                            this.wordList.push({
+                                eng: this.currLang.eng,
+                                ru: this.currLang.ru
+                            });
 
-                        } else {
                             this.currLang.eng = '';
                             this.currLang.ru = '';
                             tl.to('.add-input', {opacity:0, height:0});
                         }
+
+                    } else {
+                        this.currLang.eng = '';
+                        this.currLang.ru = '';
                     }
                 }
             }
