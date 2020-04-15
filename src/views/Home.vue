@@ -1,8 +1,8 @@
 <template>
-    <main class="container">
+    <main class="container" v-touch:swipe="swipeHandler">
         <div class="search">
             <label class="search-label" for="search"> </label>
-            <input class="search-input" id="search" type="search" v-model="inputForm">
+            <input class="search-input" id="search" type="search" placeholder="Search" v-model="searchForm">
         </div>
         <ul class="word-list">
             <li v-for="(itm, i) in wordList" :key="itm+i" :class="`word-list_item word-list_item-${i+1}`">
@@ -10,9 +10,13 @@
                 <span class="arrow">→</span>
                 <div class="lang ru">{{itm.ru}}</div>
             </li>
+            <li class="word-list_item add-input">
+                <label for="add"> </label>
+                <input id="add" class="lang" type="text" placeholder="Enter some word" v-model="addForm">
+            </li>
         </ul>
         <ul class="menu">
-            <li v-for="(itm, i) in buttons" :key="itm+i" :class="`menu_item menu_item-${i+1}`">
+            <li v-for="(itm, i) in isButtons" :key="itm+i" :class="`menu_item menu_item-${i+1}`">
                 <button :class="`menu_item_btn menu_item_btn${i+1}`" @click="isButton(i+1)">{{itm}}</button>
             </li>
         </ul>
@@ -27,13 +31,6 @@
         components: {},
         data() {
             return {
-                buttons: [
-                    "Find",
-                    "Add",
-                    "Edit",
-                    "Delete"
-                ],
-
                 wordList: [
                     {
                         eng: "Hello",
@@ -49,29 +46,84 @@
                     }
                 ],
 
-                isInput: false,
-                inputForm: ''
+                isSearch: false,
+                searchForm: '',
+                isAdd: false,
+                addForm: '',
+                currLang: {
+                    eng: '',
+                    ru: ''
+                }
             }
         },
 
-        watch: {},
+        computed: {
+          isButtons () {
+              return [
+                  !this.searchForm ? "Search" : "Find?",
+                  !this.addForm ? "Add" : "Save?",
+                  "Edit",
+                  "Delete"
+              ]
+          }
+        },
+
+        watch: {
+            addForm() {
+                const tl = new TimelineMax();
+                tl.to('.menu_item_btn2', .3, {color: '#ffffff', backgroundColor: '#67b267'})
+            }
+        },
 
         methods: {
-            //v-touch:swipe="touchHandler"
-            touchHandler(direction) {
-                console.log(direction);
+            swipeHandler(to) {
+                const tl = new TimelineMax();
+                if (to === 'left') tl.staggerTo(['.lang.ru', '.arrow'], .3, {opacity: 0}, .1);
+                if (to === 'right') tl.staggerTo(['.arrow', '.lang.ru'], .3, {opacity: 1}, .1);
             },
 
             isButton(i) {
-                if (i <= 2) {
+                if (i === 1) {
                     const input =  document.querySelector('.search-input');
                     const tl = new TimelineMax({onComplete:()=>{input.focus()}});
 
-                    this.isInput = !this.isInput;
-                    if (this.isInput) tl.to('.search-input', {opacity:1, height:50});
+                    this.isSearch = !this.isSearch;
+                    if (this.isSearch) tl.to(input, {opacity:1, height:50});
                     else {
-                        tl.to('.search-input', {opacity:0, height:0});
-                        this.inputForm = '';
+                        tl.to(input, {opacity:0, height:0});
+                        this.searchForm = '';
+                    }
+                }
+
+                if (i === 2) {
+                    const input =  document.querySelector('.add-input input');
+                    const tl = new TimelineMax({onComplete:()=>{input.focus()}});
+
+                    this.isAdd = !this.isAdd;
+                    if (this.isAdd) tl.to('.add-input', {opacity:1, height:50});
+                    else {
+                        if (this.addForm) {
+                            if (/^[a-z\s]+$/i.test(this.addForm)) this.currLang.eng = this.addForm;
+                            if (/[а-яё]/i.test(this.addForm)) this.currLang.ru = this.addForm;
+
+                            this.addForm = '';
+
+                            if (this.currLang.eng && this.currLang.ru) {
+                                this.wordList.push({
+                                    eng: this.currLang.eng,
+                                    ru: this.currLang.ru
+                                });
+
+                                this.currLang.eng = '';
+                                this.currLang.ru = '';
+                                tl.to('.add-input', {opacity:0, height:0});
+                            }
+
+                        } else {
+                            this.currLang.eng = '';
+                            this.currLang.ru = '';
+                            tl.to('.add-input', {opacity:0, height:0});
+                        }
                     }
                 }
             }
@@ -84,6 +136,10 @@
 </script>
 
 <style lang="scss" scoped>
+    .container {
+        width: 100%;
+        height: 100%;
+    }
 
     .menu {
         position: absolute;
@@ -99,7 +155,7 @@
                 width: 100%;
                 height: 50px;
                 background: #ffffff;
-                border: 1px solid;
+                border: 1px solid #000000;
                 border-right: none;
                 font-family: 'Diaria Sans Pro', serif;
             }
@@ -115,7 +171,7 @@
             color: #242020cf;
             font-size: 18px;
             font-weight: 500;
-            padding: 5px;
+            padding: 10px;
             opacity: 0;
             border: none;
             border-bottom: 1px solid;
@@ -157,6 +213,17 @@
                 justify-content: flex-start;
                 width: 30px;
                 height: 100%;
+            }
+
+            &.add-input {
+                opacity: 0;
+                border: none;
+                border-radius: 0;
+                -webkit-appearance: none;
+
+                input {
+                    border: none;
+                }
             }
         }
     }

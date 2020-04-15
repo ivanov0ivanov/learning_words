@@ -5,7 +5,7 @@ import store from './store'
 import Vue2TouchEvents from 'vue2-touch-events'
 import {gsap} from "gsap";
 
-Vue.use(Vue2TouchEvents, { swipeTolerance: 80 });
+Vue.use(Vue2TouchEvents, { swipeTolerance: 200 });
 Vue.use(gsap);
 
 Vue.config.productionTip = false;
