@@ -5,14 +5,16 @@
             <input class="search-input" id="search" type="search" placeholder="Search" v-model="searchForm">
         </div>
         <ul class="word-list">
-            <li v-for="(itm, i) in wordList" :key="itm+i" :class="`word-list_item word-list_item-${i+1}`">
-                <div class="lang eng">{{itm.eng}}</div>
-                <span class="arrow">→</span>
-                <div class="lang ru">{{itm.ru}}</div>
-            </li>
+            <transition-group name="fade">
+                <li v-for="(itm, i) in wordList" :key="itm+i" :class="`word-list_item word-list_item-${i+1}`">
+                    <div class="lang eng">{{itm.eng}}</div>
+                    <span class="arrow">→</span>
+                    <div class="lang ru">{{itm.ru}}</div>
+                </li>
+            </transition-group>
             <li class="word-list_item add-input">
                 <label for="add"> </label>
-                <input id="add" class="lang" type="text" placeholder="Enter some word" v-model="addForm">
+                <input id="add" :class="['lang', {'ph-color': (currLang.eng || currLang.ru)}]" type="text" :placeholder="(!currLang.eng && !currLang.ru) ? 'Enter some word' : 'Enter translation'" v-model="addForm">
             </li>
         </ul>
         <ul class="menu">
@@ -194,7 +196,7 @@
             border-bottom: 1px solid;
             font-size: 28px;
             font-weight: 500;
-            overflow: scroll;
+            overflow: auto;
 
             .lang {
                 //width: 100%;
@@ -224,8 +226,12 @@
                 border-radius: 0;
                 -webkit-appearance: none;
 
-                input {
+                .lang {
                     border: none;
+                }
+
+                .ph-color::-webkit-input-placeholder {
+                    color: #67b267;
                 }
             }
         }
