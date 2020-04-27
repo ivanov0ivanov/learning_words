@@ -19,7 +19,10 @@
         </ul>
         <ul class="menu">
             <li v-for="(itm, i) in isButtons" :key="itm+i" :class="`menu_item menu_item-${i+1}`">
-                <button :class="`menu_item_btn menu_item_btn${i+1}`" @click="isButton(i+1)">{{itm}}</button>
+                <button :class="`menu_item_btn menu_item_btn${i+1}`" @click="isButton(i+1)">
+                    <font-awesome-icon :icon="isIcons[i]" />
+                    <span class="menu_item_text">{{itm}}</span>
+                </button>
             </li>
         </ul>
     </main>
@@ -27,6 +30,7 @@
 
 <script>
     import {TimelineMax} from "gsap";
+    import {faSearch, faCommentMedical, faEdit, faTrashAlt} from '@fortawesome/free-solid-svg-icons'
 
     export default {
         name: 'Home',
@@ -67,12 +71,21 @@
                   "Edit",
                   "Delete"
               ]
+          },
+
+          isIcons () {
+              return [
+                  faSearch,
+                  faCommentMedical,
+                  faEdit,
+                  faTrashAlt
+              ]
           }
         },
 
         watch: {
             addForm(val) {
-                this.$nextTick(()=>{
+                this.$nextTick(() => {
                     const tl = new TimelineMax();
                     if (val) tl.to('.menu_item_btn2', .3, {color: '#ffffff', backgroundColor: '#67b267'})
                 })
@@ -141,9 +154,13 @@
 </script>
 
 <style lang="scss" scoped>
+    $c-bg: #ededed;
+    $c-text: #6b6b6b;
+
     .container {
         width: 100%;
         height: 100%;
+        background-color: $c-bg;
     }
 
     .menu {
@@ -160,8 +177,19 @@
                 width: 100%;
                 height: 50px;
                 background: #ffffff;
-                border: 1px solid #000000;
-                border-right: none;
+                border: none;
+                color: $c-text;
+            }
+
+            svg {
+                width: 20px;
+                height: 20px;
+            }
+
+            &_text {
+                display: block;
+                margin-top: 2px;
+                font-size: 12px;
                 font-family: 'Diaria Sans Pro', serif;
             }
         }
@@ -173,7 +201,8 @@
         &-input {
             width: 100%;
             height: 0;
-            color: #242020cf;
+            background-color: $c-bg;
+            color: $c-text;
             font-size: 18px;
             font-weight: 500;
             padding: 10px;
@@ -192,7 +221,6 @@
             display: flex;
             width: 100%;
             height: 60px;
-
             border-bottom: 1px solid;
             font-size: 28px;
             font-weight: 500;
@@ -204,11 +232,12 @@
                 display: flex;
                 justify-content: flex-start;
                 align-items: center;
-                color: #242020cf;
+                background-color: $c-bg;
+                color: darken($c-text, 15%);
                 padding: 10px;
 
                 &.ru {
-                    color: lighten(#242020cf, 30%);
+                    color: $c-text;
                 }
             }
 
