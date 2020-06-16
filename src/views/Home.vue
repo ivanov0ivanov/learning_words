@@ -48,6 +48,7 @@
 	import {
 		faSearch,
 		faCommentMedical,
+		faEyeSlash,
 		faEye,
 		faRandom,
 		faCheck,
@@ -120,7 +121,7 @@
 				return [
 					faSearch,
 					faCommentMedical,
-					faEye,
+					!this.hideWord ? faEyeSlash : faEye,
 					faRandom,
 					faCheck
 				]
