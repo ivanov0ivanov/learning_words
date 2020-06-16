@@ -49,7 +49,7 @@
 		faSearch,
 		faCommentMedical,
 		faEye,
-		faGlassCheers,
+		faRandom,
 		faCheck,
 		faEdit,
 		faTrashAlt
@@ -121,7 +121,7 @@
 					faSearch,
 					faCommentMedical,
 					faEye,
-					faGlassCheers,
+					faRandom,
 					faCheck
 				]
 			},
@@ -243,7 +243,25 @@
 					}
 				}
 
-				if (i === 4) this.wordList = _.shuffle(this.wordList);
+				if (i === 3) {
+					this.hideWord = !this.hideWord
+				}
+
+				if (i === 4) {
+					const
+						shakeBtn = document.querySelector('.menu_item_btn4 svg'),
+						shakeClass = ["shake-horizontal", "shake-constant"];
+
+
+					shakeBtn.classList.add(...shakeClass);
+
+					setTimeout(() => {
+						shakeBtn.classList.remove(...shakeClass);
+					},800);
+
+
+					this.wordList = _.shuffle(this.wordList);
+				}
 			}
 		},
 
