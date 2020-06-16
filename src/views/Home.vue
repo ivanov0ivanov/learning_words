@@ -28,7 +28,7 @@
 				</label>
 				<input id="add" :class="['add-word_input lang', {'ph-color': (currLang.eng || currLang.ru)}]"
 							 type="text"
-							 :placeholder="(!currLang.eng && !currLang.ru) ? 'Enter some word' : 'Enter translation'"
+							 :placeholder="(!currLang.eng && !currLang.ru) ? 'Enter some word' : `${currLang.eng ? 'Введите перевод' : 'Enter translation'}`"
 							 v-model="addForm">
 			</li>
 		</ul>
