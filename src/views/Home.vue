@@ -8,7 +8,7 @@
 		</div>
 		<ul class="word-list">
 			<transition-group name="fade flip-list">
-				<li v-for="itm in wordList" :key="itm.id" :class="`word-list_item word-list_item-${itm.id+1}`"
+				<li v-for="itm in computedList" :key="itm.id" :class="`word-list_item word-list_item-${itm.id+1}`"
 						v-touch:swipe="swipeHandler(itm.id)">
 					<div class="word-list_item_text">
 						<div class="lang eng">{{itm.eng}}</div>
@@ -115,6 +115,13 @@
 					!this.hideWord ? "Hide" : "Show",
 					"Shake"
 				]
+			},
+
+			computedList() {
+				return this.wordList.filter( item => {
+					const lang = /^[a-z\s]+$/i.test(this.searchForm) ? item.eng : item.ru;
+					return lang.toLowerCase().indexOf(this.searchForm.toLowerCase()) !== -1;
+				})
 			},
 
 			isIcons() {
